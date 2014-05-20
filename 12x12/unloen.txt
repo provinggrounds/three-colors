@@ -1,0 +1,9 @@
+FOUND! Energy 1.01943e-31, conf +--+-o-+ooo+--o+oo+--o-+oo+-o+-o---+o+ooo++-+-o-++-+--ooo+++---oo+o++-+o-+oo-+o--+-+-o+--o++-oooo-+-+-ooo+o-o+o++---+-ooo-++-+++o--++o--ooo+-++oin here
+FOUND! Energy 1.7389e-31, conf -o++o+o--oo-o+ooo--o+o+---ooo-+o+++---++o--+o+-o-+-o++o-o+-+-oo--o++-+++--o++--ooooo+o+o-ooo++--o++o----+o+++o--++--ooo---oo++-o+-o+++-+++-+--ooin here
+FOUND! Energy 1.97266e-31, conf -+++oo--+---o+-o-oo-oo++o-o-o+++oo+++o---oo+--oo--+-++o+oo-++-o+-o-+-+-+-oo+-+++o-o--o-o+oo-++oo++--o+o-+-o+o-++o--o-o-oo-oo+++o-o++oo+-+---+-++in here
+FOUND! Energy 2.12193e-31, conf o++o++--+-o+---++oo-o+-++ooo-o+oo---+o-+oo++o-o+o-o--++-+o+--+++--oo-+o-o-++o--o+o+oo---o+-+-o++o-+oo-++--+o+o+o+-oo-+o+oo--o-o-+-+o--+-++oo+--oin here
+FOUND! Energy 2.36333e-31, conf -++o--o+o++ooo-+o+o+-o-o-+oooo+--oo-+---++-++o--o++o+o---+++-oo--o++o+o-++-o---o-oo+-+o+o+-++oo-ooo+o-+-++oo-+++-o--oo--+-o+o--+o--+-+--+oo+o++-in here
+FOUND! Energy 2.79859e-31, conf -o--+o+-+---oo-oo++++oo-+o-+oo--+oo--++o++---+o+-+oo+----ooo+o++oo+o+-+-----+-oo-o+++oo+-o-+o-o+-+o-o-o+o+--+-++-+oo+-o+o-+-o--ooo+ooo+-o+-+++-+in here
+FOUND! Energy 2.86557e-31, conf oo+o--o+oo-+++o+o-o--+--oo-+-++++o+oo+--o++o-o---o-----oo-o-+oo+++o+-o++o++ooo+-+o++-o--+--++--o+-+-oooo--o++-oo+-++ooo--++o-o-+--o--o-++o-o++++in here
+FOUND! Energy 3.01173e-31, conf +ooo--o+-o-o-oo-o-o+o-+-oo--+oo-++++o++-+++o--o-o-+-oo-+-++--o-+++--ooo+-o+--o++oo-o+o-+-oo+-o++o++o-+ooo-+-o---oo+o--+--+o++-+---o+o++-o++-+o++in here
+FOUND! Energy 3.28285e-31, conf o+o-oo-+-oo+++++o+-+-o--+---+oo-oo+o+o--++o-+---+oo-+oo-+-++-o-+o++o-oo-oo-o+o+o-+-o++-++o--+o+-o+---o+o-oo+++---+-+o--o-o-o+o++o+-+oo-oo--+-++oin here

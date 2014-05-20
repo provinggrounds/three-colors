@@ -1,0 +1,174 @@
+#ifndef MCMOVE_INCLUDED
+#define MCMOVE_INCLUDED
+
+#include <vector>
+#include "StealthyChecker.h"
+#include "RandomGenerator.h"
+
+double Energy(std::vector<signed char> & sys0, std::vector<signed char> & sys1, const std::vector<StealthyChecker> & KPoints, size_t NbrSpin)
+{
+
+    double temp = 0, result = 0;
+    // E = sum_k S_0(k)^2 + S_1(k)^2
+    // S(k) = |rho(k)|^2 = rho_R^2 + rho_I^2
+	for(auto iter=KPoints.begin(); iter!=KPoints.end(); iter++)
+	{
+        temp = iter->GetRhoR(sys0);
+		result+=temp*temp;
+        
+        temp = iter->GetRhoI(sys0);
+        result+=temp*temp;
+        
+        temp = iter->GetRhoR(sys1);
+        result+=temp*temp;
+        
+        temp = iter->GetRhoI(sys1);
+        result+=temp*temp;
+	}
+	return result/NbrSpin;
+}
+
+class SpinExchangeMove 
+{
+public:
+	size_t NbrSpin;
+	size_t m, n;
+	std::vector<double> RhoRs0, RhoIs0, RhoRs1, RhoIs1;
+	std::vector<double> NextRhoRs0, NextRhoIs0, NextRhoRs1, NextRhoIs1;//this will be the new rho's if accept the move
+
+	SpinExchangeMove(const std::vector<signed char> & Configuration, const std::vector<signed char> & conf0, const std::vector<signed char> & conf1, const std::vector<StealthyChecker> & KPoints)
+	{
+		this->NbrSpin=Configuration.size();
+		this->m=0;
+		this->n=0;
+		for(std::vector<StealthyChecker>::const_iterator iter=KPoints.begin(); iter!=KPoints.end(); iter++)
+		{
+			RhoRs0.push_back(iter->GetRhoR(conf0));
+			RhoIs0.push_back(iter->GetRhoI(conf0));
+			RhoRs1.push_back(iter->GetRhoR(conf1));
+			RhoIs1.push_back(iter->GetRhoI(conf1));
+		}
+		NextRhoIs0.resize(KPoints.size());
+		NextRhoRs0.resize(KPoints.size());
+		NextRhoIs1.resize(KPoints.size());
+		NextRhoRs1.resize(KPoints.size());
+	}
+	//Generate a random move, return Energy difference. the PreFactor is also set if it is not 1.
+	double DeltaEnergy(std::vector<signed char> & sys, std::vector<signed char> & sys0, std::vector<signed char> & sys1, const std::vector<StealthyChecker> & KPoints, RandomGenerator & gen, double & PreFactor, bool LockStepSize)
+	{
+		do
+		{
+			this->m = std::floor(gen.RandomDouble() * NbrSpin);
+			this->n = std::floor(gen.RandomDouble() * NbrSpin);
+		}
+		while(sys[m] == sys[n]);
+//        
+//		double Eold0=Energy(sys0, sys1, KPoints, this->NbrSpin);
+//		std::swap(sys0[m], sys0[n]);
+//		std::swap(sys1[m], sys1[n]);
+//		double Enew0=Energy(sys0, sys1, KPoints, this->NbrSpin);
+//        double dE = Enew0-Eold0;
+//		std::swap(sys0[m], sys0[n]);
+//		std::swap(sys1[m], sys1[n]);
+//        
+        double Eold=0.0, Enew=0.0;
+//        double test0 = sys0[m];
+//        double test1 = sys0[n];
+//        double test2 = sys1[m];
+//        double test3 = sys1[n];
+//        std::cout<<"sys0"<<" m"<<m<<"="<<test0<<" n"<<n<<"="<<test1<<"\n";
+//        std::cout<<"sys1"<<" n"<<n<<"="<<test2<<" n"<<n<<"="<<test3<<"\n";
+        
+		for(size_t i=0; i<KPoints.size(); i++)
+		{
+
+            NextRhoRs0[i]=RhoRs0[i]+( sys0[m] - sys0[n])*(KPoints[i].coskr[n] -KPoints[i].coskr[m] );
+            NextRhoIs0[i]=RhoIs0[i]+( sys0[m] - sys0[n])*(KPoints[i].sinkr[n] -KPoints[i].sinkr[m] );
+            NextRhoRs1[i]=RhoRs1[i]+( sys1[m] - sys1[n])*(KPoints[i].coskr[n] -KPoints[i].coskr[m] );
+            NextRhoIs1[i]=RhoIs1[i]+( sys1[m] - sys1[n])*(KPoints[i].sinkr[n] -KPoints[i].sinkr[m] );
+            
+            
+//            double test4 =sys0[m]*KPoints[i].sinkr[m];
+//            double test5 =sys0[n]*KPoints[i].sinkr[n];
+//            double test6 =sys0[m]*KPoints[i].sinkr[m] - sys0[n]*KPoints[i].sinkr[n];
+            
+            //std::cout<<"curious "<<test4<<" , "<<test5<<" -> "<<test6<<"\n";
+
+			//std::cout<<"i"<<i<<" m"<<m<<" k = "<<KPoints[i].coskr[m]<<"\t"<<KPoints[i].sinkr[m]<<'\n';
+			//std::cout<<"i"<<i<<" n"<<n<<" k = "<<KPoints[i].coskr[n]<<"\t"<<KPoints[i].sinkr[n]<<'\n';
+            
+
+//			double test7 = sys0[m]*KPoints[i].coskr[m] - sys0[n]*KPoints[i].coskr[n];
+//            double test8 = sys0[m]*KPoints[i].sinkr[m] - sys0[n]*KPoints[i].sinkr[n];
+//			double test9 = sys1[m]*KPoints[i].coskr[m] - sys1[n]*KPoints[i].coskr[n];
+//			double test10 = sys1[m]*KPoints[i].sinkr[m] - sys1[n]*KPoints[i].sinkr[n];
+//            std::cout<<test7<<"\t"<<test8<<"\t"<<test9<<"\t"<<test10<<"\n";
+            
+//            
+//            double test11 = RhoRs0[i];
+//            double test12 = NextRhoRs0[i];
+//            double test13 = RhoIs0[i];
+//            double test14 = NextRhoIs0[i];
+//            double test15 = RhoRs1[i];
+//            double test16 = NextRhoRs1[i];
+//            double test17 = RhoIs1[i];
+//            double test18 = NextRhoIs1[i];
+//            
+//            std::cout<<test11<<"->"<<test12<<"\n";
+//            std::cout<<test13<<"->"<<test14<<"\n";
+//            std::cout<<test15<<"->"<<test16<<"\n";
+//            std::cout<<test17<<"->"<<test18<<"\n";
+            
+            Eold += RhoIs0[i]*RhoIs0[i] + RhoRs0[i]*RhoRs0[i] + RhoIs1[i]*RhoIs1[i] + RhoRs1[i]*RhoRs1[i];
+            Enew += NextRhoIs0[i]*NextRhoIs0[i] + NextRhoRs0[i]*NextRhoRs0[i] + NextRhoIs1[i]*NextRhoIs1[i] + NextRhoRs1[i]*NextRhoRs1[i];
+		}
+        
+		//debug temp
+//		std::swap(sys0[m], sys0[n]);
+//		std::swap(sys1[m], sys1[n]);
+//		for(size_t i=0; i<KPoints.size(); i++)
+//        {
+//			std::cout<<"rho0 = "<<NextRhoRs0[i]<<" \t"<<KPoints[i].GetRhoR(sys0);
+//			std::cout<<", "<<NextRhoIs0[i]<<" \t"<<KPoints[i].GetRhoI(sys0);
+//			std::cout<<"\n"<<"rho1 = "<<NextRhoRs1[i]<<" \t"<<KPoints[i].GetRhoR(sys1);
+//			std::cout<<", "<<NextRhoIs1[i]<<" \t"<<KPoints[i].GetRhoI(sys1)<<'\n';
+//        }
+//		std::swap(sys0[m], sys0[n]);
+//		std::swap(sys1[m], sys1[n]);
+//
+//        std::cout<<"ener Eold= "<<Eold0;
+//        std::cout<<", ener Enew= "<<Enew0;
+//        std::cout<<", ener   dE= "<<dE<<'\n';
+
+        double dE=(Enew-Eold)/sys.size();
+        
+        
+//        
+//        std::cout<<"calc Eold= "<<Eold;
+//        std::cout<<", calc Enew= "<<Enew;
+//        std::cout<<", calc   dE= "<<dE<<'\n'<<'\n';
+        
+		PreFactor=1.0;
+
+		return dE;
+	}
+
+	void Accept(std::vector<signed char> & sys, std::vector<signed char> & sys0, std::vector<signed char> & sys1, const std::vector<StealthyChecker> & KPoints)
+	{
+		std::swap(sys[m], sys[n]);
+		std::swap(sys0[m], sys0[n]);
+		std::swap(sys1[m], sys1[n]);
+		std::swap(RhoIs0, NextRhoIs0);
+		std::swap(RhoRs0, NextRhoRs0);
+		std::swap(RhoIs1, NextRhoIs1);
+		std::swap(RhoRs1, NextRhoRs1);
+	}
+
+	SpinExchangeMove * clone() 
+	{
+		return new SpinExchangeMove(*this);
+	}
+};
+
+
+#endif
